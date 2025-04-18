@@ -2,8 +2,9 @@
 #  Date      Vers   Who  Description
 # -----------------------------------------------------------------------------
 # 27-Apr-24  1.0.0  DWW  Initial Creation
+# 17-Apr-25  2.0.0  DWW  Misc cleanup for U55C port
 #==============================================================================
-NSDP_CHECKER_API_VERSION=1.0.0
+NSDP_CHECKER_API_VERSION=2.0.0
           VALID_RTL_TYPE=12266
 
 
@@ -63,7 +64,6 @@ REG_EXP_TADDRL_1=$((ER1_BASE +  7 * 4))
  REG_MALFORMED_1=$((ER1_BASE + 10 * 4))  
   REG_ERR_DATA_1=$((ER1_BASE + 16 * 4))
 
-
 #==============================================================================
 
 
@@ -91,40 +91,6 @@ confirm_rtl()
 
 
 #==============================================================================
-# This strips underscores from a string and converts it to decimal
-#==============================================================================
-strip_underscores()
-{
-    local stripped=$(echo $1 | sed 's/_//g')
-    echo $((stripped))
-}
-#==============================================================================
-
-
-#==============================================================================
-# This displays the upper 32 bits of an integer
-#==============================================================================
-upper32()
-{
-    local value=$(strip_underscores $1)
-    echo $(( (value >> 32) & 0xFFFFFFFF ))
-}
-#==============================================================================
-
-
-#==============================================================================
-# This displays the lower 32 bits of an integer
-#==============================================================================
-lower32()
-{
-    local value=$(strip_underscores $1)
-    echo $((value & 0xFFFFFFFF))
-}
-#==============================================================================
-
-
-
-#==============================================================================
 # This reads a 32-bit PCI register and displays its value in decimal
 #==============================================================================
 read_reg()
@@ -139,16 +105,7 @@ read_reg()
 #==============================================================================
 read_reg64()
 {
-    # What are the two 32-bit address we're going to read?
-    local addrh=$1
-    local addrl=$((addrh + 4))
-
-    # What are the 32-bit values at those addresses?
-    local hi=$(pcireg -dec $addrh)
-    local lo=$(pcireg -dec $addrl)
-
-    # Display the 64-bit value
-    echo $(( (hi << 32) | lo ))
+    pcireg -dec -wide $1
 }
 #==============================================================================
 
@@ -161,8 +118,7 @@ read_reg64()
 #==============================================================================
 set_frame_size()
 {
-    local value=$(strip_underscores $1)
-    pcireg $REG_FRAME_SIZE $value
+    pcireg $REG_FRAME_SIZE $1
 }
 #==============================================================================
 
@@ -191,8 +147,7 @@ get_ping_pong_group()
 #==============================================================================
 set_packet_size()
 {
-    local value=$(strip_underscores $1)    
-    pcireg $REG_PACKET_SIZE $value
+    pcireg $REG_PACKET_SIZE $1
 }
 #==============================================================================
 
@@ -216,12 +171,10 @@ get_packet_size()
 define_fd_ring()
 {
     # Store the address of the ring buffer
-    pcireg $REG_RFD_ADDR_H $(upper32 $1)
-    pcireg $REG_RFD_ADDR_L $(lower32 $1)
+    pcireg -wide $REG_RFD_ADDR_H $1
 
     # Store the size of the ring buffer
-    pcireg $REG_RFD_SIZE_H $(upper32 $2)
-    pcireg $REG_RFD_SIZE_L $(lower32 $2)
+    pcireg -wide $REG_RFD_SIZE_H $2
 }
 #==============================================================================
 
@@ -235,12 +188,10 @@ define_fd_ring()
 define_md_ring()
 {
     # Store the address of the ring buffer
-    pcireg $REG_RMD_ADDR_H $(upper32 $1)
-    pcireg $REG_RMD_ADDR_L $(lower32 $1)
+    pcireg -wide $REG_RMD_ADDR_H $1
 
     # Store the size of the ring buffer
-    pcireg $REG_RMD_SIZE_H $(upper32 $2)
-    pcireg $REG_RMD_SIZE_L $(lower32 $2)
+    pcireg -wide $REG_RMD_SIZE_H $2
 }
 #==============================================================================
 
@@ -250,8 +201,7 @@ define_md_ring()
 #==============================================================================
 set_frame_counter_addr()
 {
-    pcireg $REG_RFC_ADDR_H $(upper32 $1)
-    pcireg $REG_RFC_ADDR_L $(lower32 $1)        
+    pcireg -wide $REG_RFC_ADDR_H $1
 }
 #==============================================================================
 
@@ -291,38 +241,6 @@ wait_active_fifo()
     done
 }
 #==============================================================================
-
-
-
-#==============================================================================
-# This stores 32-bit words to the 64-byte meta-command buffer
-#
-# $1 = Index (0 thru 15)
-# $2 = Value to store
-#==============================================================================
-set_metadata()
-{
-    local index=$1
-    local value=$(strip_underscores $2)
-
-    if [ -z $index ] || [ -z $value ]; then
-        echo "Missing parameter on set_metacommand()" 2>&1
-        return
-    fi
-
-    if [ $index -lt 0 ] || [ $index -gt 15 ]; then
-        echo "Bad index [$index] on set_metacommand()" 2>&1
-        return
-    fi
-
-    # Compute the address of the register where we'll store this value
-    local register=$((REG_METADATA + (15 - $index)*4))
-
-    # Store the specified value into the metacommand register
-    pcireg $register $value
-}
-#==============================================================================
-
 
 
 #==============================================================================
@@ -466,7 +384,7 @@ start_fifo()
 #==============================================================================
 get_pcs_status()
 {
-    
+ 
     local eth0_pcs_lock=0
     local eth1_pcs_lock=0
 
