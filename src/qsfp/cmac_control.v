@@ -17,8 +17,17 @@
 //                       sys_reset/resetn_out changed to rx_reset/resetn_out
 //
 //                       Added "rx_datapath_reset" signal
+//
+// 27-May-24  DWW     6  Now exporting the "sync_rx_aligned" signal
+//                       Now driving the tx_precursor setting on the transceivers
+//
+// 16-Jun-24  DWW     7  Now driving the tx_diffctrl setting on the transceivers
+//
+// 20-Jul-24  DWW     9  Added port sys_reset_out and parameter USE_SYS_RESET_OUT
+//
+// 20-Apr-25  DWW    10  Now using init_clk to hold CMAC in reset for 1 second at boot
 //===================================================================================================
-
+ 
 /*
     Notes:
 
@@ -36,18 +45,30 @@
         Xilinx PG203
 
     (4) Provides a reset/resetn signal that is synchronous to rx_clk
-    
 
+    (5) Drives the tx_precursor and tx_diffctrl setting for the transceivers
+
+    (6) Drives the sys_reset pin of the CMAC
+    
 */
   
-module cmac_control # (parameter RSFEC = 1)
+module cmac_control #
 (
+    parameter      INIT_CLK_FREQ     = 250000000,
+    parameter      RSFEC             = 1,
+    parameter[4:0] TX_PRECURSOR      = 5'b00000,
+    parameter[4:0] TX_DIFF           = 5'b11000,
+    parameter      USE_SYS_RESET_OUT = 0
+)
+(
+    input init_clk,
+    
     (* X_INTERFACE_INFO      = "xilinx.com:signal:clock:1.0 rx_clk CLK"           *)
     (* X_INTERFACE_PARAMETER = "ASSOCIATED_RESET rx_reset_out:rx_resetn_out:reset_rx_datapath, FREQ_HZ 322265625" *)
     input rx_clk,
 
     (* X_INTERFACE_INFO      = "xilinx.com:signal:reset:1.0 sys_resetn_in RST" *)
-    (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_LOW "                         *)
+    (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_LOW "                          *)
     input sys_resetn_in,
 
     (* X_INTERFACE_INFO = "xilinx.com:*:rs_fec_ports:2.0 rs_fec ctl_rx_rsfec_enable" *)
@@ -71,7 +92,13 @@ module cmac_control # (parameter RSFEC = 1)
     (* X_INTERFACE_INFO = "xilinx.com:*:ctrl_ports:2.0 ctl_rx ctl_enable" *)
     output ctl_rx_enable,
 
-    // This comes from the stat_rx interface of the CMAC
+    (* X_INTERFACE_INFO = "xilinx.com:*:drp_ports:2.0 gt_trans_debug gt_txprecursor" *)
+    output[19:0] gt_txprecursor,
+
+    (* X_INTERFACE_INFO = "xilinx.com:*:drp_ports:2.0 gt_trans_debug gt_txdiffctrl" *)
+    output[19:0] gt_txdiffctrl,
+
+    (* X_INTERFACE_INFO = "xilinx.com:*:statistics_ports:2.0 stat_rx stat_rx_aligned" *)
     input      stat_rx_aligned,
 
     // This is a resetn signal, synchronous to rx_clk
@@ -87,10 +114,22 @@ module cmac_control # (parameter RSFEC = 1)
     // Tie this to gtwiz_reset_rx_datapath on the CMAC
     (* X_INTERFACE_INFO      = "xilinx.com:signal:reset:1.0 reset_rx_datapath RST" *)
     (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_HIGH "                        *)
-    output     reset_rx_datapath
+    output     reset_rx_datapath,
+
+    // stat_rx_aligned, synchronized to rx_clk
+    output     sync_rx_aligned,
+
+    // Drives the CMAC "sys_reset" input
+    output sys_reset_out
 
 );
 
+//=============================================================================
+// Select the desired amount of transceiver signal pre-emphasis
+//=============================================================================
+assign gt_txprecursor = {4{TX_PRECURSOR}};
+assign gt_txdiffctrl  = {4{TX_DIFF}};
+//=============================================================================
 
 //=============================================================================
 // The tx_enable and "send remote fault indicator" depend on whether or not
@@ -124,16 +163,28 @@ localparam RESET_TIMEOUT     = 50;
 // Countdown timers
 reg[31:0] alignment_timer, reset_timer = 0;
 
+// "sys_reset_out" is asserted so long as this timer is non-zero
+reg[31:0] init_reset_timer = INIT_CLK_FREQ;
+
+// This is "sys_resetn_in" synchronized to "init_clk"
+wire init_resetn;
+
 // The CMAC's "gtwiz_reset_rx_datapath" is asserted until the timer expires
 assign reset_rx_datapath = (reset_timer != 0);
 
 // "rx_reset_out" is always the inverse of "rx_resetn_out"
 assign rx_reset_out = ~rx_resetn_out;
 
+// Determine whether sys_reset_out will reflect the state is sys_resetn_in
+if (USE_SYS_RESET_OUT) begin
+    assign sys_reset_out = (init_reset_timer != 0) | (init_resetn == 0);
+end else begin
+    assign sys_reset_out = (init_reset_timer != 0);
+end
+
 //=============================================================================
 // Synchronize "stat_rx_aligned" into "sync_rx_aligned"
 //=============================================================================
-wire sync_rx_aligned;
 xpm_cdc_single #
 (
     .DEST_SYNC_FF  (4),   
@@ -167,6 +218,27 @@ i_sync_sys_resetn_in
     .dest_arst(rx_resetn_out)
 );
 //=============================================================================
+
+
+
+//=============================================================================
+// Synchronize "sys_resetn_in" into "init_resetn"
+//=============================================================================
+xpm_cdc_async_rst #
+(
+    .DEST_SYNC_FF(4),
+    .INIT_SYNC_FF(0),
+    .RST_ACTIVE_HIGH(RESET_ACTIVE)
+)
+i_sync_init_resetn
+(
+    .src_arst (sys_resetn_in),
+    .dest_clk (init_clk),
+    .dest_arst(init_resetn)
+);
+//=============================================================================
+
+
 
 
 
@@ -215,5 +287,14 @@ always @(posedge rx_clk) begin
 end
 //=============================================================================
 
+
+//=============================================================================
+// This controls the init asserted state of "sys_reset_out"
+//=============================================================================
+always @(posedge init_clk) begin
+    if (init_reset_timer) init_reset_timer <= init_reset_timer - 1;
+end
+//=============================================================================
+    
 
 endmodule

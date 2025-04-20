@@ -20,13 +20,11 @@
       "ethernet": {
         "eth_1": {
           "cmac": "",
-          "cmac_control": "",
-          "startup_delay": ""
+          "cmac_control": ""
         },
         "eth_0": {
           "cmac": "",
-          "cmac_control": "",
-          "startup_delay": ""
+          "cmac_control": ""
         },
         "rx0_path": {
           "axis_data_cdc": "",
@@ -852,6 +850,9 @@
                 "xci_path": "ip/top_level_cmac_0/top_level_cmac_0.xci",
                 "inst_hier_path": "ethernet/eth_1/cmac",
                 "parameters": {
+                  "ADD_GT_CNRL_STS_PORTS": {
+                    "value": "1"
+                  },
                   "CMAC_CAUI4_MODE": {
                     "value": "1"
                   },
@@ -944,9 +945,53 @@
                         "direction": "O"
                       }
                     }
+                  },
+                  "gt_trans_debug": {
+                    "mode": "Master",
+                    "vlnv_bus_definition": "xilinx.com:display_cmac_usplus:drp_ports_int:2.0",
+                    "vlnv": "xilinx.com:display_cmac_usplus:drp_ports:2.0",
+                    "port_maps": {
+                      "gt_txdiffctrl": {
+                        "physical_name": "gt_txdiffctrl",
+                        "direction": "O",
+                        "left": "19",
+                        "right": "0"
+                      },
+                      "gt_txprecursor": {
+                        "physical_name": "gt_txprecursor",
+                        "direction": "O",
+                        "left": "19",
+                        "right": "0"
+                      }
+                    }
+                  },
+                  "stat_rx": {
+                    "mode": "Slave",
+                    "vlnv_bus_definition": "xilinx.com:display_cmac_usplus:statistics_ports_int:2.0",
+                    "vlnv": "xilinx.com:display_cmac_usplus:statistics_ports:2.0",
+                    "port_maps": {
+                      "stat_rx_aligned": {
+                        "physical_name": "stat_rx_aligned",
+                        "direction": "I"
+                      }
+                    }
                   }
                 },
                 "ports": {
+                  "init_clk": {
+                    "type": "clk",
+                    "direction": "I",
+                    "parameters": {
+                      "FREQ_HZ": {
+                        "value": "250000000",
+                        "value_src": "user_prop"
+                      },
+                      "CLK_DOMAIN": {
+                        "value": "top_level_xdma_0_0_axi_aclk",
+                        "value_src": "default_prop"
+                      }
+                    }
+                  },
                   "rx_clk": {
                     "type": "clk",
                     "direction": "I",
@@ -974,9 +1019,6 @@
                         "value_src": "constant"
                       }
                     }
-                  },
-                  "stat_rx_aligned": {
-                    "direction": "I"
                   },
                   "rx_reset_out": {
                     "type": "rst",
@@ -1007,48 +1049,12 @@
                         "value_src": "constant"
                       }
                     }
-                  }
-                }
-              },
-              "startup_delay": {
-                "vlnv": "xilinx.com:module_ref:startup_delay:1.0",
-                "ip_revision": "1",
-                "xci_name": "top_level_startup_delay_0_1",
-                "xci_path": "ip/top_level_startup_delay_0_1/top_level_startup_delay_0_1.xci",
-                "inst_hier_path": "ethernet/eth_1/startup_delay",
-                "reference_info": {
-                  "ref_type": "hdl",
-                  "ref_name": "startup_delay",
-                  "boundary_crc": "0x0"
-                },
-                "ports": {
-                  "clk": {
-                    "type": "clk",
-                    "direction": "I",
-                    "parameters": {
-                      "ASSOCIATED_RESET": {
-                        "value": "reset_out",
-                        "value_src": "constant"
-                      },
-                      "FREQ_HZ": {
-                        "value": "250000000",
-                        "value_src": "user_prop"
-                      },
-                      "CLK_DOMAIN": {
-                        "value": "top_level_xdma_0_0_axi_aclk",
-                        "value_src": "default_prop"
-                      }
-                    }
                   },
-                  "reset_out": {
-                    "type": "rst",
-                    "direction": "O",
-                    "parameters": {
-                      "POLARITY": {
-                        "value": "ACTIVE_HIGH",
-                        "value_src": "constant"
-                      }
-                    }
+                  "sync_rx_aligned": {
+                    "direction": "O"
+                  },
+                  "sys_reset_out": {
+                    "direction": "O"
                   }
                 }
               }
@@ -1066,6 +1072,12 @@
                   "cmac/ctl_tx"
                 ]
               },
+              "cmac_control_gt_trans_debug": {
+                "interface_ports": [
+                  "cmac/gt_trans_debug",
+                  "cmac_control/gt_trans_debug"
+                ]
+              },
               "cmac_control_rs_fec": {
                 "interface_ports": [
                   "cmac_control/rs_fec",
@@ -1076,6 +1088,12 @@
                 "interface_ports": [
                   "axis_rx",
                   "cmac/axis_rx"
+                ]
+              },
+              "cmac_stat_rx": {
+                "interface_ports": [
+                  "cmac/stat_rx",
+                  "cmac_control/stat_rx"
                 ]
               },
               "cmac_usplus_0_gt_serial_port": {
@@ -1098,6 +1116,18 @@
                   "cmac/gtwiz_reset_rx_datapath"
                 ]
               },
+              "cmac_control_sync_rx_aligned": {
+                "ports": [
+                  "cmac_control/sync_rx_aligned",
+                  "aligned"
+                ]
+              },
+              "cmac_control_sys_reset_out": {
+                "ports": [
+                  "cmac_control/sys_reset_out",
+                  "cmac/sys_reset"
+                ]
+              },
               "cmac_control_sys_resetn_out": {
                 "ports": [
                   "cmac_control/rx_resetn_out",
@@ -1112,25 +1142,13 @@
                   "cmac_control/rx_clk"
                 ]
               },
-              "cmac_stat_rx_aligned": {
-                "ports": [
-                  "cmac/stat_rx_aligned",
-                  "aligned",
-                  "cmac_control/stat_rx_aligned"
-                ]
-              },
               "init_clk_1": {
                 "ports": [
                   "init_clk",
                   "cmac/init_clk",
                   "cmac/drp_clk",
-                  "startup_delay/clk"
-                ]
-              },
-              "startup_delay_reset_out": {
-                "ports": [
-                  "startup_delay/reset_out",
-                  "cmac/sys_reset"
+                  "cmac/gt_drpclk",
+                  "cmac_control/init_clk"
                 ]
               },
               "sys_resetn_in_1": {
@@ -1186,6 +1204,9 @@
                 "xci_path": "ip/top_level_cmac_usplus_0_0/top_level_cmac_usplus_0_0.xci",
                 "inst_hier_path": "ethernet/eth_0/cmac",
                 "parameters": {
+                  "ADD_GT_CNRL_STS_PORTS": {
+                    "value": "1"
+                  },
                   "CMAC_CAUI4_MODE": {
                     "value": "1"
                   },
@@ -1278,9 +1299,53 @@
                         "direction": "O"
                       }
                     }
+                  },
+                  "gt_trans_debug": {
+                    "mode": "Master",
+                    "vlnv_bus_definition": "xilinx.com:display_cmac_usplus:drp_ports_int:2.0",
+                    "vlnv": "xilinx.com:display_cmac_usplus:drp_ports:2.0",
+                    "port_maps": {
+                      "gt_txdiffctrl": {
+                        "physical_name": "gt_txdiffctrl",
+                        "direction": "O",
+                        "left": "19",
+                        "right": "0"
+                      },
+                      "gt_txprecursor": {
+                        "physical_name": "gt_txprecursor",
+                        "direction": "O",
+                        "left": "19",
+                        "right": "0"
+                      }
+                    }
+                  },
+                  "stat_rx": {
+                    "mode": "Slave",
+                    "vlnv_bus_definition": "xilinx.com:display_cmac_usplus:statistics_ports_int:2.0",
+                    "vlnv": "xilinx.com:display_cmac_usplus:statistics_ports:2.0",
+                    "port_maps": {
+                      "stat_rx_aligned": {
+                        "physical_name": "stat_rx_aligned",
+                        "direction": "I"
+                      }
+                    }
                   }
                 },
                 "ports": {
+                  "init_clk": {
+                    "type": "clk",
+                    "direction": "I",
+                    "parameters": {
+                      "FREQ_HZ": {
+                        "value": "250000000",
+                        "value_src": "user_prop"
+                      },
+                      "CLK_DOMAIN": {
+                        "value": "top_level_xdma_0_0_axi_aclk",
+                        "value_src": "default_prop"
+                      }
+                    }
+                  },
                   "rx_clk": {
                     "type": "clk",
                     "direction": "I",
@@ -1308,9 +1373,6 @@
                         "value_src": "constant"
                       }
                     }
-                  },
-                  "stat_rx_aligned": {
-                    "direction": "I"
                   },
                   "rx_reset_out": {
                     "type": "rst",
@@ -1341,48 +1403,12 @@
                         "value_src": "constant"
                       }
                     }
-                  }
-                }
-              },
-              "startup_delay": {
-                "vlnv": "xilinx.com:module_ref:startup_delay:1.0",
-                "ip_revision": "1",
-                "xci_name": "top_level_startup_delay_0_0",
-                "xci_path": "ip/top_level_startup_delay_0_0/top_level_startup_delay_0_0.xci",
-                "inst_hier_path": "ethernet/eth_0/startup_delay",
-                "reference_info": {
-                  "ref_type": "hdl",
-                  "ref_name": "startup_delay",
-                  "boundary_crc": "0x0"
-                },
-                "ports": {
-                  "clk": {
-                    "type": "clk",
-                    "direction": "I",
-                    "parameters": {
-                      "ASSOCIATED_RESET": {
-                        "value": "reset_out",
-                        "value_src": "constant"
-                      },
-                      "FREQ_HZ": {
-                        "value": "250000000",
-                        "value_src": "user_prop"
-                      },
-                      "CLK_DOMAIN": {
-                        "value": "top_level_xdma_0_0_axi_aclk",
-                        "value_src": "default_prop"
-                      }
-                    }
                   },
-                  "reset_out": {
-                    "type": "rst",
-                    "direction": "O",
-                    "parameters": {
-                      "POLARITY": {
-                        "value": "ACTIVE_HIGH",
-                        "value_src": "constant"
-                      }
-                    }
+                  "sync_rx_aligned": {
+                    "direction": "O"
+                  },
+                  "sys_reset_out": {
+                    "direction": "O"
                   }
                 }
               }
@@ -1400,6 +1426,12 @@
                   "cmac/ctl_tx"
                 ]
               },
+              "cmac_control_gt_trans_debug": {
+                "interface_ports": [
+                  "cmac/gt_trans_debug",
+                  "cmac_control/gt_trans_debug"
+                ]
+              },
               "cmac_control_rs_fec": {
                 "interface_ports": [
                   "cmac_control/rs_fec",
@@ -1410,6 +1442,12 @@
                 "interface_ports": [
                   "axis_rx",
                   "cmac/axis_rx"
+                ]
+              },
+              "cmac_stat_rx": {
+                "interface_ports": [
+                  "cmac/stat_rx",
+                  "cmac_control/stat_rx"
                 ]
               },
               "cmac_usplus_0_gt_serial_port": {
@@ -1432,6 +1470,18 @@
                   "cmac/gtwiz_reset_rx_datapath"
                 ]
               },
+              "cmac_control_sync_rx_aligned": {
+                "ports": [
+                  "cmac_control/sync_rx_aligned",
+                  "aligned"
+                ]
+              },
+              "cmac_control_sys_reset_out": {
+                "ports": [
+                  "cmac_control/sys_reset_out",
+                  "cmac/sys_reset"
+                ]
+              },
               "cmac_control_sys_resetn_out": {
                 "ports": [
                   "cmac_control/rx_resetn_out",
@@ -1446,25 +1496,13 @@
                   "cmac_control/rx_clk"
                 ]
               },
-              "cmac_stat_rx_aligned": {
-                "ports": [
-                  "cmac/stat_rx_aligned",
-                  "aligned",
-                  "cmac_control/stat_rx_aligned"
-                ]
-              },
               "init_clk_0_1": {
                 "ports": [
                   "init_clk",
                   "cmac/init_clk",
                   "cmac/drp_clk",
-                  "startup_delay/clk"
-                ]
-              },
-              "startup_delay_reset_out": {
-                "ports": [
-                  "startup_delay/reset_out",
-                  "cmac/sys_reset"
+                  "cmac/gt_drpclk",
+                  "cmac_control/init_clk"
                 ]
               },
               "sys_resetn_in_1": {

@@ -45,16 +45,16 @@ preplace netloc gt_ref_clk_0_1 1 0 3 NJ 440 NJ 440 N
 preplace netloc pcie_refclk_1 1 0 1 NJ 300
 preplace netloc qsfp_clk_0_1 1 0 3 NJ 460 NJ 460 N
 preplace netloc smartconnect_M00_AXI 1 2 2 NJ 220 NJ
+preplace netloc smartconnect_M01_AXI 1 2 2 N 160 NJ
 preplace netloc smartconnect_M02_AXI 1 2 1 N 60
 preplace netloc smartconnect_M05_AXI 1 2 1 N 320
 preplace netloc xdma_0_M_AXI_B 1 1 1 N 280
 preplace netloc xdma_0_pcie_mgt 1 0 1 NJ 280
-preplace netloc smartconnect_M01_AXI 1 2 2 N 160 NJ
 levelinfo -pg 1 0 160 460 770 1080 1260
 pagesize -pg 1 -db -bbox -sgen -140 0 1430 610
 ",
-   "No Loops_ScaleFactor":"0.710728",
-   "No Loops_TopLeft":"-134,-121",
+   "No Loops_ScaleFactor":"0.831418",
+   "No Loops_TopLeft":"-136,-58",
    "guistr":"# # String gsaved with Nlview 7.0r4  2019-12-20 bk=1.5203 VDI=41 GEI=36 GUI=JA:10.0 TLS
 #  -string -flagsOSRD
 preplace port clk_200mhz -pg 1 -lvl 0 -x 0 -y 60 -defaultsOSRD

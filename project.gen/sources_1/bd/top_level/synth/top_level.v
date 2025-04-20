@@ -2,7 +2,7 @@
 //Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
-//Date        : Thu Apr 17 23:09:01 2025
+//Date        : Sun Apr 20 01:14:26 2025
 //Host        : wolf-super-server running 64-bit Ubuntu 20.04.6 LTS
 //Command     : generate_target top_level.bd
 //Design      : top_level
@@ -536,11 +536,15 @@ module eth_0_imp_INHW46
   wire cmac_control_ctl_rx_ctl_enable;
   wire cmac_control_ctl_tx_ctl_enable;
   wire cmac_control_ctl_tx_ctl_tx_send_rfi;
+  wire [19:0]cmac_control_gt_trans_debug_gt_txdiffctrl;
+  wire [19:0]cmac_control_gt_trans_debug_gt_txprecursor;
   wire cmac_control_reset_rx_datapath;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable_correction;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable_indication;
   wire cmac_control_rs_fec_ctl_tx_rsfec_enable;
+  wire cmac_control_sys_reset_out;
+  wire cmac_stat_rx_stat_rx_aligned;
   wire init_clk;
   wire qsfp_clk_clk_n;
   wire qsfp_clk_clk_p;
@@ -548,13 +552,16 @@ module eth_0_imp_INHW46
   wire [3:0]qsfp_gt_grx_p;
   wire [3:0]qsfp_gt_gtx_n;
   wire [3:0]qsfp_gt_gtx_p;
-  wire startup_delay_reset_out;
   wire stream_clk;
   wire stream_resetn;
   wire sys_resetn_in;
 
   top_level_cmac_usplus_0_0 cmac
-       (.core_drp_reset(1'b0),
+       (.common0_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .common0_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .common0_drpen(1'b0),
+        .common0_drpwe(1'b0),
+        .core_drp_reset(1'b0),
         .core_rx_reset(1'b0),
         .core_tx_reset(1'b0),
         .ctl_rsfec_ieee_error_indication_mode(1'b0),
@@ -575,13 +582,48 @@ module eth_0_imp_INHW46
         .drp_di({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .drp_en(1'b0),
         .drp_we(1'b0),
+        .gt0_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt0_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt0_drpen(1'b0),
+        .gt0_drpwe(1'b0),
+        .gt1_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt1_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt1_drpen(1'b0),
+        .gt1_drpwe(1'b0),
+        .gt2_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt2_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt2_drpen(1'b0),
+        .gt2_drpwe(1'b0),
+        .gt3_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt3_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt3_drpen(1'b0),
+        .gt3_drpwe(1'b0),
+        .gt_drpclk(init_clk),
+        .gt_eyescanreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_eyescantrigger({1'b0,1'b0,1'b0,1'b0}),
         .gt_loopback_in({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .gt_ref_clk_n(qsfp_clk_clk_n),
         .gt_ref_clk_p(qsfp_clk_clk_p),
+        .gt_rxcdrhold({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxdfelpmreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxlpmen({1'b0,1'b0,1'b0,1'b0}),
         .gt_rxn_in(qsfp_gt_grx_n),
         .gt_rxp_in(qsfp_gt_grx_p),
+        .gt_rxpolarity({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxprbscntreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxprbssel({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxrate({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txdiffctrl(cmac_control_gt_trans_debug_gt_txdiffctrl),
+        .gt_txinhibit({1'b0,1'b0,1'b0,1'b0}),
         .gt_txn_out(qsfp_gt_gtx_n),
         .gt_txp_out(qsfp_gt_gtx_p),
+        .gt_txpippmen({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpippmsel({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpolarity({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpostcursor({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprbsforceerr({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprbssel({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprecursor(cmac_control_gt_trans_debug_gt_txprecursor),
         .gt_txusrclk2(stream_clk),
         .gtwiz_reset_rx_datapath(cmac_control_reset_rx_datapath),
         .gtwiz_reset_tx_datapath(1'b0),
@@ -592,8 +634,8 @@ module eth_0_imp_INHW46
         .rx_axis_tuser(axis_rx_tuser),
         .rx_axis_tvalid(axis_rx_tvalid),
         .rx_clk(stream_clk),
-        .stat_rx_aligned(aligned),
-        .sys_reset(startup_delay_reset_out),
+        .stat_rx_aligned(cmac_stat_rx_stat_rx_aligned),
+        .sys_reset(cmac_control_sys_reset_out),
         .tx_axis_tdata({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .tx_axis_tkeep({1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1}),
         .tx_axis_tlast(1'b0),
@@ -608,14 +650,16 @@ module eth_0_imp_INHW46
         .ctl_tx_enable(cmac_control_ctl_tx_ctl_enable),
         .ctl_tx_rsfec_enable(cmac_control_rs_fec_ctl_tx_rsfec_enable),
         .ctl_tx_send_rfi(cmac_control_ctl_tx_ctl_tx_send_rfi),
+        .gt_txdiffctrl(cmac_control_gt_trans_debug_gt_txdiffctrl),
+        .gt_txprecursor(cmac_control_gt_trans_debug_gt_txprecursor),
+        .init_clk(init_clk),
         .reset_rx_datapath(cmac_control_reset_rx_datapath),
         .rx_clk(stream_clk),
         .rx_resetn_out(stream_resetn),
-        .stat_rx_aligned(aligned),
+        .stat_rx_aligned(cmac_stat_rx_stat_rx_aligned),
+        .sync_rx_aligned(aligned),
+        .sys_reset_out(cmac_control_sys_reset_out),
         .sys_resetn_in(sys_resetn_in));
-  top_level_startup_delay_0_0 startup_delay
-       (.clk(init_clk),
-        .reset_out(startup_delay_reset_out));
 endmodule
 
 module eth_1_imp_1BZVVMW
@@ -661,11 +705,15 @@ module eth_1_imp_1BZVVMW
   wire cmac_control_ctl_rx_ctl_enable;
   wire cmac_control_ctl_tx_ctl_enable;
   wire cmac_control_ctl_tx_ctl_tx_send_rfi;
+  wire [19:0]cmac_control_gt_trans_debug_gt_txdiffctrl;
+  wire [19:0]cmac_control_gt_trans_debug_gt_txprecursor;
   wire cmac_control_reset_rx_datapath;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable_correction;
   wire cmac_control_rs_fec_ctl_rx_rsfec_enable_indication;
   wire cmac_control_rs_fec_ctl_tx_rsfec_enable;
+  wire cmac_control_sys_reset_out;
+  wire cmac_stat_rx_stat_rx_aligned;
   wire init_clk;
   wire qsfp_clk_clk_n;
   wire qsfp_clk_clk_p;
@@ -673,13 +721,16 @@ module eth_1_imp_1BZVVMW
   wire [3:0]qsfp_gt_grx_p;
   wire [3:0]qsfp_gt_gtx_n;
   wire [3:0]qsfp_gt_gtx_p;
-  wire startup_delay_reset_out;
   wire stream_clk;
   wire stream_resetn;
   wire sys_resetn_in;
 
   top_level_cmac_0 cmac
-       (.core_drp_reset(1'b0),
+       (.common0_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .common0_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .common0_drpen(1'b0),
+        .common0_drpwe(1'b0),
+        .core_drp_reset(1'b0),
         .core_rx_reset(1'b0),
         .core_tx_reset(1'b0),
         .ctl_rsfec_ieee_error_indication_mode(1'b0),
@@ -700,13 +751,48 @@ module eth_1_imp_1BZVVMW
         .drp_di({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .drp_en(1'b0),
         .drp_we(1'b0),
+        .gt0_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt0_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt0_drpen(1'b0),
+        .gt0_drpwe(1'b0),
+        .gt1_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt1_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt1_drpen(1'b0),
+        .gt1_drpwe(1'b0),
+        .gt2_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt2_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt2_drpen(1'b0),
+        .gt2_drpwe(1'b0),
+        .gt3_drpaddr({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt3_drpdi({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt3_drpen(1'b0),
+        .gt3_drpwe(1'b0),
+        .gt_drpclk(init_clk),
+        .gt_eyescanreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_eyescantrigger({1'b0,1'b0,1'b0,1'b0}),
         .gt_loopback_in({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .gt_ref_clk_n(qsfp_clk_clk_n),
         .gt_ref_clk_p(qsfp_clk_clk_p),
+        .gt_rxcdrhold({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxdfelpmreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxlpmen({1'b0,1'b0,1'b0,1'b0}),
         .gt_rxn_in(qsfp_gt_grx_n),
         .gt_rxp_in(qsfp_gt_grx_p),
+        .gt_rxpolarity({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxprbscntreset({1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxprbssel({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_rxrate({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txdiffctrl(cmac_control_gt_trans_debug_gt_txdiffctrl),
+        .gt_txinhibit({1'b0,1'b0,1'b0,1'b0}),
         .gt_txn_out(qsfp_gt_gtx_n),
         .gt_txp_out(qsfp_gt_gtx_p),
+        .gt_txpippmen({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpippmsel({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpolarity({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txpostcursor({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprbsforceerr({1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprbssel({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .gt_txprecursor(cmac_control_gt_trans_debug_gt_txprecursor),
         .gt_txusrclk2(stream_clk),
         .gtwiz_reset_rx_datapath(cmac_control_reset_rx_datapath),
         .gtwiz_reset_tx_datapath(1'b0),
@@ -717,8 +803,8 @@ module eth_1_imp_1BZVVMW
         .rx_axis_tuser(axis_rx_tuser),
         .rx_axis_tvalid(axis_rx_tvalid),
         .rx_clk(stream_clk),
-        .stat_rx_aligned(aligned),
-        .sys_reset(startup_delay_reset_out),
+        .stat_rx_aligned(cmac_stat_rx_stat_rx_aligned),
+        .sys_reset(cmac_control_sys_reset_out),
         .tx_axis_tdata({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
         .tx_axis_tkeep({1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1,1'b1}),
         .tx_axis_tlast(1'b0),
@@ -733,14 +819,16 @@ module eth_1_imp_1BZVVMW
         .ctl_tx_enable(cmac_control_ctl_tx_ctl_enable),
         .ctl_tx_rsfec_enable(cmac_control_rs_fec_ctl_tx_rsfec_enable),
         .ctl_tx_send_rfi(cmac_control_ctl_tx_ctl_tx_send_rfi),
+        .gt_txdiffctrl(cmac_control_gt_trans_debug_gt_txdiffctrl),
+        .gt_txprecursor(cmac_control_gt_trans_debug_gt_txprecursor),
+        .init_clk(init_clk),
         .reset_rx_datapath(cmac_control_reset_rx_datapath),
         .rx_clk(stream_clk),
         .rx_resetn_out(stream_resetn),
-        .stat_rx_aligned(aligned),
+        .stat_rx_aligned(cmac_stat_rx_stat_rx_aligned),
+        .sync_rx_aligned(aligned),
+        .sys_reset_out(cmac_control_sys_reset_out),
         .sys_resetn_in(sys_resetn_in));
-  top_level_startup_delay_0_1 startup_delay
-       (.clk(init_clk),
-        .reset_out(startup_delay_reset_out));
 endmodule
 
 module ethernet_imp_1SW6PPD
@@ -1880,7 +1968,7 @@ module rx1_path_imp_DPH8WT
         .resetn(eth_resetn));
 endmodule
 
-(* CORE_GENERATION_INFO = "top_level,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=top_level,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=40,numReposBlks=31,numNonXlnxBlks=0,numHierBlks=9,maxHierDepth=2,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=19,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=7,synth_mode=Hierarchical}" *) (* HW_HANDOFF = "top_level.hwdef" *) 
+(* CORE_GENERATION_INFO = "top_level,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=top_level,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=38,numReposBlks=29,numNonXlnxBlks=0,numHierBlks=9,maxHierDepth=2,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=17,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=7,synth_mode=Hierarchical}" *) (* HW_HANDOFF = "top_level.hwdef" *) 
 module top_level
    (hbm_cattrip,
     pcie0_refclk_clk_n,
