@@ -63,18 +63,59 @@ assign channel_0 = 0;
 assign channel_1 = 1;
 
 //=========================  AXI Register Map  =============================
+
+/*
+    @register RDMX address of the frame-data buffer
+    @rsize 64
+    @rname REG_RFD_ADDR
+*/
 localparam REG_RFD_ADDR_H        =  0;
 localparam REG_RFD_ADDR_L        =  1;
+
+/*
+    @register Size of the frame-data buffer (in bytes)
+    @rsize 64
+    @rname REG_RFD_SIZE
+*/
 localparam REG_RFD_SIZE_H        =  2;
 localparam REG_RFD_SIZE_L        =  3;
+
+/*
+    @register RDMX address of the meta-data buffer
+    @rsize 64
+    @rname REG_RMD_ADDR
+*/
 localparam REG_RMD_ADDR_H        =  4;
 localparam REG_RMD_ADDR_L        =  5;
+
+/*
+    @register Size of the meta-data buffer (in bytes)
+    @rsize 64
+    @rname REG_RMD_SIZE
+*/
 localparam REG_RMD_SIZE_H        =  6;
 localparam REG_RMD_SIZE_L        =  7;
+
+/*
+    @register RDMX address of the frame-counter
+    @rsize 64
+    @rname REG_RFC_ADDR
+
+*/
+
 localparam REG_RFC_ADDR_H        =  8;
 localparam REG_RFC_ADDR_L        =  9;
+
+/*
+    @register Size of a frame in bytes, typically 0x40_0000
+*/
 localparam REG_FRAME_SIZE        = 10;
+
+/*
+    @register Size of the payload in a frame-data packet, typically 4096
+*/
 localparam REG_PACKET_SIZE       = 11;
+
 localparam REG_PACKETS_PER_GROUP = 12;
 //==========================================================================
 
