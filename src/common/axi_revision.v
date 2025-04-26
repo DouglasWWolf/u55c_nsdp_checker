@@ -74,15 +74,50 @@ module axi_revision#
     //==========================================================================
  );
 
-    // Register indices
-    localparam REG_MAJOR       = 0;
-    localparam REG_MINOR       = 1;
-    localparam REG_BUILD       = 2;
-    localparam REG_RCAND       = 3;
-    localparam REG_DATE        = 4;
-    localparam REG_RTL_TYPE    = 5;
-    localparam REG_RTL_SUBTYPE = 6;
    
+
+    /*
+        @register "major" portion of RTL revision "major.minor.build.rc"
+    */
+    localparam REG_MAJOR   = 0;
+
+    /*
+        @register "minor" portion of RTL revision "major.minor.build.rc"
+    */
+    localparam REG_MINOR   = 1;
+
+
+    /*
+        @register "build" portion of RTL revision "major.minor.build.rc"
+    */
+    localparam REG_BUILD   = 2;
+
+    /*
+        @register "release candidate" portion of RTL revision "major.minor.build.rc"
+    */
+    localparam REG_RC      = 3;
+
+
+    /*
+        @register RTL build date
+
+        @field year  16  0  RO n/a Year
+        @field month  8 16  RO n/a Month (1 thru 12)
+        @field day    8 24  RO n/a Day (1 thru 31)
+    */
+    localparam REG_DATE    = 4;
+
+    /*
+        @register Uniquely identifies this RTL design
+    */
+    localparam REG_TYPE    = 5;
+
+    /*
+        @register Identifies the hardware platform this build is intended for 
+    */
+    localparam REG_SUBTYPE = 6;
+    
+    
     //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
     //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
     //                           This section is standard AXI4-Lite Slave logic
