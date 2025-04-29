@@ -31,11 +31,11 @@
 
 
 //
-// Register:    RTL_RC
+// Register:    RTL_RCAND
 // Size:        32-bits
 // Description: "release candidate" portion of RTL revision "major.minor.build.rc"
 //
-#define RTL_RC                                                       0x000000000000000cULL
+#define RTL_RCAND                                                    0x000000000000000cULL
 
 
 //

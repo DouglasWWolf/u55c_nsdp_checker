@@ -95,7 +95,7 @@ module axi_revision#
     /*
         @register "release candidate" portion of RTL revision "major.minor.build.rc"
     */
-    localparam REG_RC      = 3;
+    localparam REG_RCAND   = 3;
 
 
     /*
@@ -110,7 +110,7 @@ module axi_revision#
     /*
         @register Uniquely identifies this RTL design
     */
-    localparam REG_TYPE    = 5;
+    localparam REG_TYPE = 5;
 
     /*
         @register Identifies the hardware platform this build is intended for 
@@ -269,13 +269,13 @@ module axi_revision#
         end else if (user_read_start) begin
             s_axi_rresp <= OKAY;
             case(s_axi_araddr >> 2)
-                REG_MAJOR:       s_axi_rdata <= VERSION_MAJOR;
-                REG_MINOR:       s_axi_rdata <= VERSION_MINOR;
-                REG_BUILD:       s_axi_rdata <= VERSION_BUILD;
-                REG_RCAND:       s_axi_rdata <= VERSION_RCAND;
-                REG_DATE:        s_axi_rdata <= VERSION_DATE;
-                REG_RTL_TYPE:    s_axi_rdata <= RTL_TYPE;
-                REG_RTL_SUBTYPE: s_axi_rdata <= RTL_SUBTYPE;
+                REG_MAJOR:   s_axi_rdata <= VERSION_MAJOR;
+                REG_MINOR:   s_axi_rdata <= VERSION_MINOR;
+                REG_BUILD:   s_axi_rdata <= VERSION_BUILD;
+                REG_RCAND:   s_axi_rdata <= VERSION_RCAND;
+                REG_DATE:    s_axi_rdata <= VERSION_DATE;
+                REG_TYPE:    s_axi_rdata <= RTL_TYPE;
+                REG_SUBTYPE: s_axi_rdata <= RTL_SUBTYPE;
             endcase
         end
     end
