@@ -11,7 +11,7 @@ git add ${folder}/${project}.srcs
 git add ${folder}/${project}.xpr
 
 git add src xdc runtime grab.sh README.md push
-git add xlate_vreg.conf make_fpga_regs fpga_regs.h
+git add xlate_vreg.conf make_fpga_regs fpga_regs.h 
 
 git commit -m "No commit message"
 git push origin main
