@@ -25,7 +25,3 @@ localparam VERSION_MAJOR = 2;
 localparam VERSION_MINOR = 0;
 localparam VERSION_BUILD = 0;
 localparam VERSION_RCAND = 0;
-
-localparam VERSION_DAY   = 17;
-localparam VERSION_MONTH = 4;
-localparam VERSION_YEAR  = 2025;
