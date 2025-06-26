@@ -40,7 +40,7 @@
         "resetn": [ { "direction": "in" } ],
         "eth_active": [ { "direction": "in" } ],
         "run_status": [ { "direction": "in" } ],
-        "error": [ { "direction": "in", "size_left": "17", "size_right": "0" } ],
+        "error": [ { "direction": "in", "size_left": "31", "size_right": "0" } ],
         "error_data": [ { "direction": "in", "size_left": "511", "size_right": "0" } ],
         "expected_fdata": [ { "direction": "in", "size_left": "31", "size_right": "0" } ],
         "expected_taddr": [ { "direction": "in", "size_left": "63", "size_right": "0" } ],

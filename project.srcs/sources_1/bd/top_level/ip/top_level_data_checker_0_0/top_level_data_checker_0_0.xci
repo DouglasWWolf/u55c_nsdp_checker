@@ -66,7 +66,7 @@
         "expected_frame_pattern": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
         "expected_rdmx_addr": [ { "direction": "out", "size_left": "63", "size_right": "0" } ],
         "expected_rdmx_seq": [ { "direction": "out", "size_left": "15", "size_right": "0" } ],
-        "error": [ { "direction": "out", "size_left": "17", "size_right": "0" } ],
+        "error": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
         "error_data": [ { "direction": "out", "size_left": "511", "size_right": "0" } ],
         "all_good": [ { "direction": "out" } ]
       },

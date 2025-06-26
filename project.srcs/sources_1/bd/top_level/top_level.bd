@@ -3507,7 +3507,7 @@
                   },
                   "error": {
                     "direction": "I",
-                    "left": "17",
+                    "left": "31",
                     "right": "0"
                   },
                   "error_data": {
@@ -3805,7 +3805,7 @@
                   },
                   "error": {
                     "direction": "O",
-                    "left": "17",
+                    "left": "31",
                     "right": "0"
                   },
                   "error_data": {
@@ -3892,8 +3892,8 @@
                 "ports": [
                   "sys_resetn",
                   "pattern_fifo/s_axis_aresetn",
-                  "data_checker/resetn",
-                  "axi_reporter/resetn"
+                  "axi_reporter/resetn",
+                  "data_checker/resetn"
                 ]
               },
               "data_checker_eth_active": {
@@ -3973,8 +3973,8 @@
                 "ports": [
                   "clk",
                   "pattern_fifo/s_axis_aclk",
-                  "data_checker/clk",
-                  "axi_reporter/clk"
+                  "axi_reporter/clk",
+                  "data_checker/clk"
                 ]
               }
             }
@@ -4343,7 +4343,7 @@
                   },
                   "error": {
                     "direction": "I",
-                    "left": "17",
+                    "left": "31",
                     "right": "0"
                   },
                   "error_data": {
@@ -4641,7 +4641,7 @@
                   },
                   "error": {
                     "direction": "O",
-                    "left": "17",
+                    "left": "31",
                     "right": "0"
                   },
                   "error_data": {
@@ -4728,8 +4728,8 @@
                 "ports": [
                   "sys_resetn",
                   "pattern_fifo/s_axis_aresetn",
-                  "data_checker/resetn",
-                  "axi_reporter/resetn"
+                  "axi_reporter/resetn",
+                  "data_checker/resetn"
                 ]
               },
               "data_checker_eth_active": {
@@ -4809,8 +4809,8 @@
                 "ports": [
                   "clk",
                   "pattern_fifo/s_axis_aclk",
-                  "data_checker/clk",
-                  "axi_reporter/clk"
+                  "axi_reporter/clk",
+                  "data_checker/clk"
                 ]
               }
             }

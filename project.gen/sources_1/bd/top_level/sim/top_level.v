@@ -2,7 +2,7 @@
 //Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
-//Date        : Wed Jun 11 18:35:53 2025
+//Date        : Fri Jun 20 01:11:18 2025
 //Host        : wolf-super-server running 64-bit Ubuntu 20.04.6 LTS
 //Command     : generate_target top_level.bd
 //Design      : top_level
@@ -1465,7 +1465,7 @@ module reporter_0_imp_14RIEO2
   wire eth_rx_tready;
   wire eth_rx_tuser;
   wire eth_rx_tvalid;
-  wire [17:0]ila0_error;
+  wire [31:0]ila0_error;
   wire [511:0]ila0_error_data;
   wire [31:0]ila0_expected_frame_pattern;
   wire sys_resetn;
@@ -1672,7 +1672,7 @@ module reporter_1_imp_YQ6NLO
   wire eth_rx_tready;
   wire eth_rx_tuser;
   wire eth_rx_tvalid;
-  wire [17:0]ila1_error;
+  wire [31:0]ila1_error;
   wire [511:0]ila1_error_data;
   wire [31:0]ila1_expected_frame_pattern;
   wire sys_resetn;
