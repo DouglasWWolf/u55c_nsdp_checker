@@ -59,6 +59,7 @@
         "RMD_SIZE": [ { "direction": "in", "size_left": "63", "size_right": "0" } ],
         "RFC_ADDR": [ { "direction": "in", "size_left": "63", "size_right": "0" } ],
         "PACKETS_PER_GROUP": [ { "direction": "in", "size_left": "31", "size_right": "0" } ],
+        "ignore_rdmx_flags": [ { "direction": "in" } ],
         "eth_active": [ { "direction": "out" } ],
         "total_packets_rcvd": [ { "direction": "out", "size_left": "63", "size_right": "0" } ],
         "malformed_packets": [ { "direction": "out", "size_left": "63", "size_right": "0" } ],

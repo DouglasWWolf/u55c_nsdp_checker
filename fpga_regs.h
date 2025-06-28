@@ -9,7 +9,7 @@
 //
 // Register:    RTL_MAJOR
 // Size:        32-bits
-// Description: "major" portion of RTL revision "major.minor.build.rc"
+// Description: "major" portion of RTL revision "major.minor.build"
 //
 #define RTL_MAJOR                                                    0x0000000000000000ULL
 
@@ -17,7 +17,7 @@
 //
 // Register:    RTL_MINOR
 // Size:        32-bits
-// Description: "minor" portion of RTL revision "major.minor.build.rc"
+// Description: "minor" portion of RTL revision "major.minor.build"
 //
 #define RTL_MINOR                                                    0x0000000000000004ULL
 
@@ -25,34 +25,26 @@
 //
 // Register:    RTL_BUILD
 // Size:        32-bits
-// Description: "build" portion of RTL revision "major.minor.build.rc"
+// Description: "build" portion of RTL revision "major.minor.build"
 //
 #define RTL_BUILD                                                    0x0000000000000008ULL
 
 
 //
-// Register:    RTL_RCAND
-// Size:        32-bits
-// Description: "release candidate" portion of RTL revision "major.minor.build.rc"
-//
-#define RTL_RCAND                                                    0x000000000000000cULL
-
-
-//
 // Register:    RTL_DATE
 // Size:        32-bits
-// Description: RTL build date
+// Description: Build date
 //
 // Fields:
 //     NAME                           WID   POS TYPE RESET       DESCRIPTION
-//     year                           16  15:00 RO   n/a         Year
-//     month                          8   23:16 RO   n/a         Month (1 thru 12)
-//     day                            8   31:24 RO   n/a         Day (1 thru 31)
+//     month                          8   31:24 RO   N/A         Build month (1 thru 12)
+//     day                            8   23:16 RO   N/A         Build date  (1 thru 31)
+//     year                           16  15:00 RO   N/A         Build year  (4 digit year)
 //
 #define RTL_DATE                                                     0x0000000000000010ULL
+#define RTL_DATE_month                                               0x0818000000000010ULL
+#define RTL_DATE_day                                                 0x0810000000000010ULL
 #define RTL_DATE_year                                                0x1000000000000010ULL
-#define RTL_DATE_month                                               0x0810000000000010ULL
-#define RTL_DATE_day                                                 0x0818000000000010ULL
 
 
 //
@@ -64,15 +56,32 @@
 
 
 //
-// Register:    RTL_SUBTYPE
+// Register:    RTL_TIME
 // Size:        32-bits
-// Description: Identifies the hardware platform this build is intended for
+// Description: Build date
 //
-#define RTL_SUBTYPE                                                  0x0000000000000018ULL
+// Fields:
+//     NAME                           WID   POS TYPE RESET       DESCRIPTION
+//     hour                           8   23:16 RO   N/A         Build month (0 thru 23)
+//     min                            8   15:08 RO   N/A         Build date  (0 thru 59)
+//     sec                            8   07:00 RO   N/A         Build year  (0 thru 59)
+//
+#define RTL_TIME                                                     0x000000000000001cULL
+#define RTL_TIME_hour                                                0x081000000000001cULL
+#define RTL_TIME_min                                                 0x080800000000001cULL
+#define RTL_TIME_sec                                                 0x080000000000001cULL
 
 
 //
-// Register:    ETH_ETH_STATUS
+// Register:    RTL_GIT_HASH
+// Size:        This is an array of five consecutive 32-bit registers
+// Description: Git commit hash
+//
+#define RTL_GIT_HASH                                                 0x0000000000000040ULL
+
+
+//
+// Register:    ETH_STATUS
 // Size:        32-bits
 // Description: Link status bits for the two Ethernet/QSFP ports
 //
@@ -81,9 +90,9 @@
 //     qsfp0                          1       0 RO   n/a         QSFP_0 link status
 //     qsfp1                          1      16 RO   n/a         QSFP_1 link_status
 //
-#define ETH_ETH_STATUS                                               0x0000000000000500ULL
-#define ETH_ETH_STATUS_qsfp0                                         0x0100000000000500ULL
-#define ETH_ETH_STATUS_qsfp1                                         0x0110000000000500ULL
+#define ETH_STATUS                                                   0x0000000000000500ULL
+#define ETH_STATUS_qsfp0                                             0x0100000000000500ULL
+#define ETH_STATUS_qsfp1                                             0x0110000000000500ULL
 
 
 //
@@ -178,6 +187,14 @@
 // Description: Size of the payload in a frame-data packet, typically 4096
 //
 #define MCC_PACKET_SIZE                                              0x000000000000202cULL
+
+
+//
+// Register:    MCC_IGNORE_RDMX_FLAGS
+// Size:        32-bits
+// Description: If this is 1, checks of the RDMX flags are not performed
+//
+#define MCC_IGNORE_RDMX_FLAGS                                        0x0000000000002034ULL
 
 
 //

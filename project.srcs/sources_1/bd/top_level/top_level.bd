@@ -7,8 +7,7 @@
       "name": "top_level",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
       "synth_flow_mode": "Hierarchical",
-      "tool_version": "2024.2",
-      "validated": "true"
+      "tool_version": "2024.2"
     },
     "design_tree": {
       "pcie": {
@@ -245,17 +244,7 @@
     "ports": {
       "pcie_perst_l": {
         "type": "rst",
-        "direction": "I",
-        "parameters": {
-          "INSERT_VIP": {
-            "value": "0",
-            "value_src": "default"
-          },
-          "POLARITY": {
-            "value": "ACTIVE_LOW",
-            "value_src": "default"
-          }
-        }
+        "direction": "I"
       },
       "qsfp0_leds": {
         "direction": "O",
@@ -2546,10 +2535,6 @@
                     "value": "AXI4LITE",
                     "value_src": "constant"
                   },
-                  "FREQ_HZ": {
-                    "value": "250000000",
-                    "value_src": "user_prop"
-                  },
                   "ID_WIDTH": {
                     "value": "0",
                     "value_src": "constant"
@@ -2633,26 +2618,6 @@
                   "MAX_BURST_LENGTH": {
                     "value": "1",
                     "value_src": "auto"
-                  },
-                  "CLK_DOMAIN": {
-                    "value": "top_level_xdma_0_0_axi_aclk",
-                    "value_src": "default_prop"
-                  },
-                  "NUM_READ_THREADS": {
-                    "value": "1",
-                    "value_src": "user_prop"
-                  },
-                  "NUM_WRITE_THREADS": {
-                    "value": "1",
-                    "value_src": "user_prop"
-                  },
-                  "RUSER_BITS_PER_BYTE": {
-                    "value": "0",
-                    "value_src": "user_prop"
-                  },
-                  "WUSER_BITS_PER_BYTE": {
-                    "value": "0",
-                    "value_src": "user_prop"
                   }
                 },
                 "memory_map_ref": "S_AXI",
@@ -2754,14 +2719,6 @@
                   "ASSOCIATED_RESET": {
                     "value": "axi_resetn",
                     "value_src": "constant"
-                  },
-                  "FREQ_HZ": {
-                    "value": "250000000",
-                    "value_src": "user_prop"
-                  },
-                  "CLK_DOMAIN": {
-                    "value": "top_level_xdma_0_0_axi_aclk",
-                    "value_src": "default_prop"
                   }
                 }
               },
@@ -3213,6 +3170,9 @@
                 "right": "0"
               },
               "channel": {
+                "direction": "I"
+              },
+              "ignore_rdmx_flags": {
                 "direction": "I"
               }
             },
@@ -3770,6 +3730,9 @@
                     "left": "31",
                     "right": "0"
                   },
+                  "ignore_rdmx_flags": {
+                    "direction": "I"
+                  },
                   "eth_active": {
                     "direction": "O"
                   },
@@ -3932,6 +3895,12 @@
                   "axi_reporter/packets_rcvd"
                 ]
               },
+              "ignore_rdmx_flags_1": {
+                "ports": [
+                  "ignore_rdmx_flags",
+                  "data_checker/ignore_rdmx_flags"
+                ]
+              },
               "ila0_all_good": {
                 "ports": [
                   "data_checker/all_good",
@@ -4049,6 +4018,9 @@
                 "right": "0"
               },
               "channel": {
+                "direction": "I"
+              },
+              "ignore_rdmx_flags": {
                 "direction": "I"
               }
             },
@@ -4606,6 +4578,9 @@
                     "left": "31",
                     "right": "0"
                   },
+                  "ignore_rdmx_flags": {
+                    "direction": "I"
+                  },
                   "eth_active": {
                     "direction": "O"
                   },
@@ -4766,6 +4741,12 @@
                 "ports": [
                   "data_checker/total_packets_rcvd",
                   "axi_reporter/packets_rcvd"
+                ]
+              },
+              "ignore_rdmx_flags_1": {
+                "ports": [
+                  "ignore_rdmx_flags",
+                  "data_checker/ignore_rdmx_flags"
                 ]
               },
               "ila1_all_good": {
@@ -5729,6 +5710,9 @@
               },
               "channel_1": {
                 "direction": "O"
+              },
+              "ignore_rdmx_flags": {
+                "direction": "O"
               }
             }
           }
@@ -5881,6 +5865,13 @@
             "ports": [
               "mindy_core_ctl/channel_1",
               "reporter_1/channel"
+            ]
+          },
+          "mindy_core_ctl_ignore_rdmx_flags": {
+            "ports": [
+              "mindy_core_ctl/ignore_rdmx_flags",
+              "reporter_0/ignore_rdmx_flags",
+              "reporter_1/ignore_rdmx_flags"
             ]
           },
           "pcie_axi_aclk": {

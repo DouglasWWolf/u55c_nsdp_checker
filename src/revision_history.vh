@@ -20,7 +20,8 @@
    2.0.0  17-Apr-25  DWW  Ported to Alveo U55C
 
    2.1.0  19-Jun-25  DWW  Added check for sender's QSFP port
-                          Added check for RDMX flags 
+                          Added optional check for RDMX flags 
+                       
 ================================================================================================
 */
 localparam RTL_TYPE      = 12266;

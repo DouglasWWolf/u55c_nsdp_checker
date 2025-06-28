@@ -99,6 +99,7 @@ module axi_eth_status
 
     /*
         @register Link status bits for the two Ethernet/QSFP ports
+        @rname REG_STATUS
         @field qsfp0 1  0 RO n/a QSFP_0 link status
         @field qsfp1 1 16 RO n/a QSFP_1 link_status   
     */
